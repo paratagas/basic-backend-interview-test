@@ -7,7 +7,12 @@ var appSettings = require('../settings');
 
 var baseAppUrl = appSettings.appHost + ":" + appSettings.appRort;
 
-// App tests
+/**
+ * App API tests suite
+ *
+ * @param {string} Message
+ * @param {callback}
+ */
 suite('App tests', function() {
     this.timeout(30000);
 

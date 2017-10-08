@@ -1,3 +1,7 @@
+/**
+ * Main app logic
+ */
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -14,15 +18,26 @@ app.use(cookieParser());
 
 app.use('/', routes);
 
-// catch 404 and forward to error handler
+/**
+ * 404 status handler
+ *
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ */
 app.use(function(req, res, next) {
     res.json({"page": "not found"});
 });
 
-// error handlers:
-
-// development error handler
-// will print stacktrace
+/**
+ * 500 status handler
+ * In development mode will print stacktrace
+ *
+ * @param {object} err
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ */
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
@@ -33,8 +48,15 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
+/**
+ * 500 status handler
+ * In production mode no stacktraces leaked to user
+ *
+ * @param {object} err
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ */
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {

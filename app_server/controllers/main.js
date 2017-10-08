@@ -1,12 +1,28 @@
+/**
+ * Main controller
+ */
+
 var request = require('request');
 var appSettings = require('../../settings');
 var mongoose = require('mongoose');
 var NeoModel = mongoose.model('Neo');
 
+/**
+ * Home page handler
+ *
+ * @param {object} req
+ * @param {object} res
+ */
 module.exports.home = function(req, res) {
     res.json({"hello": "world!"});
 };
 
+/**
+ * Hazardous page handler
+ *
+ * @param {object} req
+ * @param {object} res
+ */
 module.exports.hazardous = function(req, res) {
     var today = new Date();
     var startDate = today.toISOString().substring(0, 10);
@@ -43,6 +59,12 @@ module.exports.hazardous = function(req, res) {
     );
 };
 
+/**
+ * Fastest page handler
+ *
+ * @param {object} req
+ * @param {object} res
+ */
 module.exports.fastest = function(req, res) {
     var hazardousValue = false; // default: false
 
@@ -55,6 +77,12 @@ module.exports.fastest = function(req, res) {
     _parseAllNeosData(res, parsedNeos, hazardousValue, _calculateFastestNeo);
 };
 
+/**
+ * Best year page handler
+ *
+ * @param {object} req
+ * @param {object} res
+ */
 module.exports.bestYear = function(req, res) {
     var hazardousValue = false; // default: false
 
@@ -67,6 +95,12 @@ module.exports.bestYear = function(req, res) {
     _parseAllNeosData(res, parsedNeos, hazardousValue, _calculateBestYear);
 };
 
+/**
+ * Best month page handler
+ *
+ * @param {object} req
+ * @param {object} res
+ */
 module.exports.bestMonth = function(req, res) {
     var hazardousValue = false; // default: false
 
@@ -79,6 +113,12 @@ module.exports.bestMonth = function(req, res) {
     _parseAllNeosData(res, parsedNeos, hazardousValue, _calculateBestMonth);
 };
 
+/**
+ * Get neos by hazardous criteria
+ *
+ * @param {array} parsedNeos
+ * @param {boolean} hazardousValue
+ */
 function _selectNeosByHazardousValue(parsedNeos, hazardousValue) {
     var selectedNeos = [];
 
@@ -91,6 +131,13 @@ function _selectNeosByHazardousValue(parsedNeos, hazardousValue) {
     return selectedNeos;
 }
 
+/**
+ * Get fastest neo
+ *
+ * @param {object} res
+ * @param {array} parsedNeos
+ * @param {boolean} hazardousValue
+ */
 function _calculateFastestNeo(res, parsedNeos, hazardousValue) {
     var selectedNeos = _selectNeosByHazardousValue(parsedNeos, hazardousValue);
     var currentMaxSpeed = 0;
@@ -106,6 +153,13 @@ function _calculateFastestNeo(res, parsedNeos, hazardousValue) {
     res.send(currentFastest);
 }
 
+/**
+ * Create best year data
+ *
+ * @param {object} res
+ * @param {array} parsedNeos
+ * @param {boolean} hazardousValue
+ */
 function _calculateBestYear(res, parsedNeos, hazardousValue) {
     var allYears = {};
     var selectedNeos = _selectNeosByHazardousValue(parsedNeos, hazardousValue);
@@ -132,6 +186,13 @@ function _calculateBestYear(res, parsedNeos, hazardousValue) {
     res.send(bestYear);
 }
 
+/**
+ * Create best month data
+ *
+ * @param {object} res
+ * @param {array} parsedNeos
+ * @param {boolean} hazardousValue
+ */
 function _calculateBestMonth(res, parsedNeos, hazardousValue) {
     var allMonths = {};
     var selectedNeos = _selectNeosByHazardousValue(parsedNeos, hazardousValue);
@@ -174,6 +235,14 @@ function _calculateBestMonth(res, parsedNeos, hazardousValue) {
     res.send(bestMonth);
 }
 
+/**
+ * Main logic to get and parse all neos information
+ *
+ * @param {object} res
+ * @param {array} parsedNeos
+ * @param {boolean} hazardousValue
+ * @param {callback} processNeos
+ */
 function _parseAllNeosData(res, parsedNeos, hazardousValue, processNeos) {
     // Url example of getting all the data:
     // https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD
@@ -239,6 +308,13 @@ function _parseAllNeosData(res, parsedNeos, hazardousValue, processNeos) {
     }
 }
 
+/**
+ * Main logic to get and parse neos information for 3 days info
+ *
+ * @param {object} res
+ * @param {array} neos
+ * @param {number} elementsCount
+ */
 function _parseNeos(res, neos, elementsCount) {
     var parsedNeos = [];
     for (var date in neos) {
@@ -258,6 +334,13 @@ function _parseNeos(res, neos, elementsCount) {
     _storeNeosToDB(res, parsedNeos, elementsCount);
 }
 
+/**
+ * Store data in DB
+ *
+ * @param {object} res
+ * @param {array} parsedNeos
+ * @param {number} elementsCount
+ */
 function _storeNeosToDB(res, parsedNeos, elementsCount) {
     NeoModel.remove({}, function() { // to avoid duplicate entries
         var elementsCounter = 0;
@@ -279,6 +362,11 @@ function _storeNeosToDB(res, parsedNeos, elementsCount) {
     });
 }
 
+/**
+ * Get potentially hazardous neos
+ *
+ * @param {object} res
+ */
 function _findPotentiallyHazardous(res) {
     var query = NeoModel.find({})
         .select({

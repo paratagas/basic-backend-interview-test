@@ -1,3 +1,6 @@
+/**
+ * App settings module
+ */
 module.exports = {
     appHost: "http://localhost",
     appRort: "4488",

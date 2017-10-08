@@ -76,6 +76,10 @@ App settings can be changed in "settings.js"
   - the API-KEY is `N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD`
   - documentation: https://api.nasa.gov/neo/?api_key=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD
 
+**NOTE:** NASA has limitated given API-KEY  with 1000 queries per hour. On the other hand all
+info about Neo (more than 17000 entries) is stored in more than 850 pages (we need one request per page). So with this API-KEY I am not able to make more than 1 full-set fetching query per hour. The solution is to decrease the amount of fetched pages to demonstrate data processing and to save ability to make new requests without long waiting.
+
+
 3. Write a command
   - to request the data from the last 3 days from nasa api
   - response contains count of Near-Earth Objects (NEOs)

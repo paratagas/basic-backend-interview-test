@@ -1,3 +1,7 @@
+/**
+ * Neo model schema module
+ */
+
 var mongoose = require('mongoose');
 
 var NeoSchema = new mongoose.Schema({
